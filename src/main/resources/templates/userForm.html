@@ -1,0 +1,42 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8" />
+    <title>View User</title>
+</head>
+<body align="center">
+
+<h1>View User</h1>
+
+<br/><br/>
+<div align="center" th:if="${user}">
+    <table border="0">
+        <tr>
+            <td>ID</td>
+            <td>:</td>
+            <td th:utext="${user.id}">...</td>
+        </tr>
+        <tr>
+            <td>Name</td>
+            <td>:</td>
+            <td th:utext="${user.username}">...</td>
+        </tr>
+        <tr>
+            <td>Age</td>
+            <td>:</td>
+            <td th:utext="${user.age}">...</td>
+        </tr>
+        <tr>
+            <td>City</td>
+            <td>:</td>
+            <td th:utext="${user.city}">...</td>
+        </tr>
+    </table>
+</div>
+<br>
+<br>
+<form th:action="@{/logout}" method="POST">
+    <input type="submit" value="Logout"/>
+</form>
+</body>
+</html>
