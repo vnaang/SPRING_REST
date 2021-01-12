@@ -21,12 +21,15 @@ public class User implements UserDetails {
     @Column
     private String username;
     @Column
-    private String city;
+    private String lastname;
     @Column
     private int age;
-
+    @Column
+    private String email;
     @Column
     private String password;
+    @Column
+    private String role;
 
     @Column
     @Fetch(FetchMode.JOIN)
@@ -39,17 +42,22 @@ public class User implements UserDetails {
     public User() {
     }
 
-    public User(String username, String city, int age) {
-        this.username = username;
-        this.city = city;
-        this.age = age;
 
-    }
     public User(Long id,String username,String password,Set<Role> roles){
         this.id = id;
         this.username = username;
         this.password = password;
         this.roles = roles;
+    }
+
+    public User(String username, String lastname, int age, String email, String password, Set<Role> roles, String role) {
+        this.username = username;
+        this.lastname = lastname;
+        this.age = age;
+        this.email = email;
+        this.password = password;
+        this.roles = roles;
+        this.role = role;
     }
 
     public long getId() {
@@ -64,14 +72,6 @@ public class User implements UserDetails {
         this.username = username;
     }
 
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
     public int getAge() {
         return age;
     }
@@ -79,7 +79,6 @@ public class User implements UserDetails {
     public void setAge(int age) {
         this.age = age;
     }
-
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -126,5 +125,43 @@ public class User implements UserDetails {
 
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
+    }
+
+    public String getLastname() {
+        return lastname;
+    }
+
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", lastname='" + lastname + '\'' +
+                ", age=" + age +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", roles=" + roles +
+                '}';
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 }

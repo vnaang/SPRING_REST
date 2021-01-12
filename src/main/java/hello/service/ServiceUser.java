@@ -16,8 +16,6 @@ public interface ServiceUser {
 
     List<User> getAllUsers();
 
-    void updateUser(User user);
-
     User getUserByName(String name);
 
     void dropPass(User user);

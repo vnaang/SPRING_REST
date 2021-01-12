@@ -2,59 +2,52 @@ package hello.controller;
 
 import hello.model.User;
 import hello.service.ServiceUser;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import hello.repository.UserRepository;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.List;
 
 
-@Controller
+@RestController
+@RequestMapping("/api")
 public class AdminController {
 
-    private final UserRepository userRepository;
     private final ServiceUser serviceUser;
 
-    public AdminController(UserRepository userRepository, ServiceUser serviceUser) {
-        this.userRepository = userRepository;
+    public AdminController(ServiceUser serviceUser) {
         this.serviceUser = serviceUser;
     }
 
-    @GetMapping("/admin")
-    public String homePage(Model model){
-        model.addAttribute("users", serviceUser.getAllUsers());
-        return "table";
+
+    @RequestMapping(value = "/admin/users", method = RequestMethod.POST)
+    public ResponseEntity<List<User>> getAllUsers() {
+        return new ResponseEntity<>(serviceUser.getAllUsers(), HttpStatus.OK);
     }
 
-    @GetMapping("/delete")
-    public String deleteUser(@ModelAttribute("user") User user){
+    @PostMapping(value = "/admin/update")
+    public void update(User user) {
+        serviceUser.saveUser(user);
+    }
+
+    @PostMapping("/admin/remove")
+    public void deleteUser(User user){
         serviceUser.delete(user);
-        return "redirect:/admin";
+
     }
 
-    @GetMapping("/new")
-    public String add(@ModelAttribute("user") User user) {
-        return "edit";
+    @PostMapping("/admin/addUser")
+    public void add( User user) {
+        serviceUser.addUser(user);
     }
 
-    @PostMapping("/save")
-    public String saveUser(@ModelAttribute("user") User user){
-        if (user.getId()==0){
-            serviceUser.saveUser(user);
-        }else {
-            serviceUser.updateUser(user);
-        }
-        return "redirect:/admin";
-    }
-
-    @GetMapping("/edit")
-    public String edit(Model model,@RequestParam Long id ){
-        User user = serviceUser.getUserById(id);
-        serviceUser.dropPass(user);
-        model.addAttribute("user", user);
-        return "edit";
+    @PostMapping("/user/getUser")
+    public ResponseEntity<List<User>> getUser(HttpSession session) {
+        List<User> userList = new ArrayList<>();
+        User user = (User) session.getAttribute("user");
+        userList.add(user);
+        return new ResponseEntity<>(userList, HttpStatus.OK);
     }
 }
 

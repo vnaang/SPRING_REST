@@ -7,9 +7,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+
+import java.util.*;
 
 
 @Service
@@ -37,7 +36,11 @@ public class ServiceUserImpl implements ServiceUser {
     @Transactional
     @Override
     public void saveUser(User user) throws UsernameNotFoundException {
-        user.setRoles(Collections.singleton(new Role(2L,"ROLE_USER")));
+        if(user.getRole().contains("ROLE_ADMIN")){
+            user.setRoles(Collections.singleton(new Role(1l,"ROLE_ADMIN")));
+        }else{
+            user.setRoles(Collections.singleton(new Role(2l,"ROLE_USER")));
+        }
         user.setPassword(encoder.encode(user.getPassword()));
         userRepository.save(user);
     }
@@ -58,14 +61,6 @@ public class ServiceUserImpl implements ServiceUser {
 
     @Transactional
     @Override
-    public void updateUser(User user) {
-        user.setRoles(Collections.singleton(new Role(2L,"ROLE_USER")));
-        user.setPassword(encoder.encode(user.getPassword()));
-        userRepository.save(user);
-    }
-
-    @Transactional
-    @Override
     public User getUserByName(String username) {
         return userRepository.findByUsername(username);
     }
@@ -75,5 +70,6 @@ public class ServiceUserImpl implements ServiceUser {
     public void dropPass(User user){
         user.setPassword(null);
     }
+
 }
 
